@@ -1,0 +1,2431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Найди секреты! 🌟 С Днём Рождения!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 20px;
+            animation: floatUp 4s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-200px) rotate(20deg); opacity: 0; }
+        }
+
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .progress-text {
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            max-width: 200px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f6d365, #fda085);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .secret-counter {
+            background: rgba(255,255,255,0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .main-container {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 75px 20px 40px;
+        }
+
+        .hero {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-card {
+            background: rgba(255,255,255,0.97);
+            border-radius: 70px;
+            padding: 45px 35px;
+            max-width: 650px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #c44569, #e84393);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-date {
+            font-size: 1.1rem;
+            color: #f093fb;
+            font-weight: 600;
+            margin: 12px 0;
+        }
+
+        .hero-text {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+
+        .hidden-emoji {
+            display: inline-block;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 15px;
+            user-select: none;
+            position: relative;
+            background: rgba(255,255,255,0.2);
+            margin: 5px;
+        }
+
+        .hidden-emoji:hover {
+            transform: scale(1.3) rotate(5deg);
+            background: rgba(255,255,255,0.6);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .hidden-emoji.found {
+            opacity: 0.3;
+            transform: scale(0.85);
+            filter: grayscale(0.7);
+            cursor: pointer;
+            background: rgba(76, 175, 80, 0.15);
+        }
+
+        .hidden-emoji.found:hover {
+            transform: scale(0.95);
+        }
+
+        .hidden-emoji .check-mark {
+            display: none;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 0.9rem;
+            background: #4caf50;
+            color: white;
+            border-radius: 50%;
+            padding: 0 3px;
+        }
+
+        .hidden-emoji.found .check-mark {
+            display: block;
+        }
+
+        .photo-item {
+            border-radius: 16px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 8px 0;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: transparent;
+            padding: 0;
+            border: none;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .photo-item .photo-content {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            position: relative;
+        }
+
+        .photo-item .photo-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 16px;
+            transition: transform 0.3s;
+            background: transparent;
+        }
+
+        .photo-item .photo-content img:hover {
+            transform: scale(1.02);
+        }
+
+        .photo-tall { max-width: 190px; }
+        .photo-tall .photo-content { aspect-ratio: 3/4; }
+        .photo-tall .photo-content img { aspect-ratio: 3/4; }
+
+        .photo-wide { max-width: 420px; }
+        .photo-wide .photo-content { aspect-ratio: 16/10; }
+        .photo-wide .photo-content img { aspect-ratio: 16/10; }
+
+        .photo-small { max-width: 140px; }
+        .photo-small .photo-content { aspect-ratio: 1/1; }
+        .photo-small .photo-content img { aspect-ratio: 1/1; }
+
+        .photo-large { max-width: 370px; }
+        .photo-large .photo-content { aspect-ratio: 4/3; }
+        .photo-large .photo-content img { aspect-ratio: 4/3; }
+
+        .photo-medium { max-width: 240px; }
+        .photo-medium .photo-content { aspect-ratio: 3/4; }
+        .photo-medium .photo-content img { aspect-ratio: 3/4; }
+
+        .photo-square { max-width: 210px; }
+        .photo-square .photo-content { aspect-ratio: 1/1; }
+        .photo-square .photo-content img { aspect-ratio: 1/1; }
+
+        .photo-tilt-left { transform: rotate(-4deg); }
+        .photo-tilt-right { transform: rotate(4deg); }
+        .photo-tilt-more { transform: rotate(-7deg); }
+        .photo-tilt-less { transform: rotate(2deg); }
+        .photo-tilt-heavy { transform: rotate(-9deg); }
+        .photo-tilt-slight { transform: rotate(1.5deg); }
+        .photo-tilt-none { transform: rotate(0deg); }
+        .photo-tilt-crazy { transform: rotate(-11deg); }
+        .photo-tilt-slight-right { transform: rotate(3deg); }
+
+        .photo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.92);
+            z-index: 100000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding: 20px;
+        }
+
+        .photo-modal-content {
+            max-width: 85%;
+            max-height: 85vh;
+            background: transparent;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: fadeInUp 0.3s;
+        }
+
+        .photo-modal-content img {
+            width: 100%;
+            height: auto;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .photo-modal .close-photo-modal {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            z-index: 100001;
+            transition: all 0.3s;
+            background: none;
+            border: none;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .photo-modal .close-photo-modal:hover {
+            transform: rotate(90deg);
+            color: #f093fb;
+        }
+
+        .quote-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px 30px;
+            border-radius: 40px;
+            max-width: 420px;
+            width: 92%;
+            text-align: center;
+            z-index: 10000;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            animation: fadeInUp 0.3s;
+        }
+
+        .quote-popup .emoji-display {
+            font-size: 2.5rem;
+            margin: 8px 0;
+        }
+
+        .quote-popup .quote-text {
+            font-size: 1rem;
+            font-style: italic;
+            color: #333;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+
+        .quote-popup .popup-image {
+            display: none;
+            margin: 10px 0;
+        }
+
+        .quote-popup .popup-image img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .quote-popup .hint-text {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .quote-popup .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .quote-popup button {
+            padding: 8px 22px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .btn-close-quote {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-watch-video {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-watch-video:hover {
+            transform: scale(1.05);
+        }
+
+        .quote-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .music-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px 30px;
+            border-radius: 40px;
+            max-width: 420px;
+            width: 92%;
+            text-align: center;
+            z-index: 10000;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            animation: fadeInUp 0.3s;
+        }
+
+        .music-popup .emoji-display {
+            font-size: 2.5rem;
+            margin: 8px 0;
+        }
+
+        .music-popup .quote-text {
+            font-size: 1rem;
+            font-style: italic;
+            color: #333;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+
+        .music-popup .music-label {
+            font-size: 0.75rem;
+            color: #999;
+            margin: 5px 0 10px 0;
+        }
+
+        .music-popup .play-btn {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin: 5px 0 10px 0;
+        }
+
+        .music-popup .play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .music-popup .music-player {
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 15px 15px 10px 15px;
+            margin: 10px 0;
+        }
+
+        .music-popup .music-player .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .music-popup .music-player input[type="range"] {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 10px;
+            outline: none;
+            transition: background 0.2s;
+        }
+
+        .music-popup .music-player input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            cursor: pointer;
+        }
+
+        .music-popup .music-player input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            cursor: pointer;
+            border: none;
+        }
+
+        .music-popup .music-player .controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 5px;
+        }
+
+        .music-popup .music-player .controls-row .volume-slider {
+            width: 80px;
+        }
+
+        .music-popup .music-player .controls-row .volume-slider input[type="range"] {
+            width: 100%;
+            height: 3px;
+        }
+
+        .music-popup .music-player .controls-row .volume-icon {
+            font-size: 1.1rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .music-popup .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .music-popup button {
+            padding: 8px 22px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .btn-close-music {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-watch-video-music {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .music-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .lsp-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px 30px;
+            border-radius: 40px;
+            max-width: 420px;
+            width: 92%;
+            text-align: center;
+            z-index: 10000;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            animation: fadeInUp 0.3s;
+        }
+
+        .lsp-popup .emoji-display {
+            font-size: 2.5rem;
+            margin: 8px 0;
+        }
+
+        .lsp-popup .quote-text {
+            font-size: 1rem;
+            font-style: italic;
+            color: #333;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+
+        .lsp-popup .poem-text {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: #555;
+            margin: 10px 0 15px 0;
+            font-style: italic;
+            background: #fdf2f8;
+            padding: 15px;
+            border-radius: 20px;
+        }
+
+        .lsp-popup .music-label {
+            font-size: 0.75rem;
+            color: #999;
+            margin: 5px 0 10px 0;
+        }
+
+        .lsp-popup .play-btn {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin: 5px 0 10px 0;
+        }
+
+        .lsp-popup .play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .lsp-popup .music-player {
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 15px 15px 10px 15px;
+            margin: 10px 0;
+        }
+
+        .lsp-popup .music-player .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .lsp-popup .music-player input[type="range"] {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 10px;
+            outline: none;
+            transition: background 0.2s;
+        }
+
+        .lsp-popup .music-player input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            cursor: pointer;
+        }
+
+        .lsp-popup .music-player input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            cursor: pointer;
+            border: none;
+        }
+
+        .lsp-popup .music-player .controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 5px;
+        }
+
+        .lsp-popup .music-player .controls-row .volume-slider {
+            width: 80px;
+        }
+
+        .lsp-popup .music-player .controls-row .volume-slider input[type="range"] {
+            width: 100%;
+            height: 3px;
+        }
+
+        .lsp-popup .music-player .controls-row .volume-icon {
+            font-size: 1.1rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .lsp-popup .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .lsp-popup button {
+            padding: 8px 22px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .btn-close-lsp {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-watch-video-lsp {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-watch-edit-lsp {
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: white;
+        }
+
+        .lsp-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.92);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-modal-content {
+            background: white;
+            border-radius: 50px;
+            padding: 25px 20px;
+            max-width: 480px;
+            width: 92%;
+            text-align: center;
+            animation: fadeInUp 0.4s;
+        }
+
+        .video-modal-content h3 {
+            color: #c44569;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .video-modal-content video {
+            width: 100%;
+            border-radius: 25px;
+            margin: 12px 0;
+            max-height: 280px;
+            background: #000;
+        }
+
+        .video-modal-content .video-error {
+            color: #e74c3c;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        .close-video {
+            background: #c44569;
+            color: white;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3436;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            z-index: 10002;
+            max-width: 90%;
+            text-align: center;
+            animation: fadeInUp 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: white;
+            opacity: 0.7;
+            font-size: 0.85rem;
+        }
+
+        .big-emoji-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px 0;
+        }
+
+        .text-block {
+            background: rgba(255,255,255,0.9);
+            border-radius: 30px;
+            padding: 25px;
+            margin: 20px 0;
+            color: #333;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .text-block p {
+            margin-bottom: 10px;
+        }
+
+        .flex-center { display: flex; justify-content: center; padding: 8px 0; flex-wrap: wrap; gap: 20px; }
+        .flex-left { display: flex; justify-content: flex-start; padding: 8px 0; flex-wrap: wrap; gap: 20px; }
+        .flex-right { display: flex; justify-content: flex-end; padding: 8px 0; flex-wrap: wrap; gap: 20px; }
+        .flex-around { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; padding: 8px 0; }
+
+        .final-block {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 30px 20px;
+            animation: fadeInUp 0.8s;
+            overflow-y: auto;
+        }
+
+        .final-block.active {
+            display: flex;
+        }
+
+        .final-block .final-emoji {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+
+        .final-block .final-emoji:hover {
+            transform: scale(1.1);
+        }
+
+        .final-block .final-emoji:active {
+            transform: scale(0.9);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes heartBurst {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        .burst-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100000;
+            font-size: 2rem;
+            animation: heartBurst 1.2s ease-out forwards;
+        }
+
+        .final-block .final-title {
+            font-size: 2.8rem;
+            color: #f093fb;
+            font-weight: 800;
+            text-shadow: 0 0 40px rgba(240, 147, 251, 0.3);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .final-block .final-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .final-block .final-music-controls {
+            margin-bottom: 15px;
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .final-block .final-play-btn {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .final-block .final-play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+        }
+
+        .final-block .final-music-player {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: none;
+        }
+
+        .final-block .final-music-player.active {
+            display: block;
+        }
+
+        .final-block .final-music-player .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 2px;
+        }
+
+        .final-block .final-music-player input[type="range"] {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .final-block .final-music-player input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            cursor: pointer;
+        }
+
+        .final-block .final-music-player .controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 5px;
+        }
+
+        .final-block .final-music-player .controls-row .volume-slider {
+            width: 80px;
+        }
+
+        .final-block .final-music-player .controls-row .volume-slider input[type="range"] {
+            width: 100%;
+            height: 3px;
+        }
+
+        .final-block .final-music-player .controls-row .volume-icon {
+            font-size: 1.1rem;
+            cursor: pointer;
+            user-select: none;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .final-block .final-music-player .controls-row .final-stop-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .final-block .final-music-player .controls-row .final-stop-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .final-block .final-video-wrapper {
+            max-width: 550px;
+            width: 100%;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            background: #000;
+            display: none;
+            position: relative;
+        }
+
+        .final-block .final-video-wrapper.active {
+            display: block;
+        }
+
+        .final-block .final-video-wrapper video {
+            width: 100%;
+            display: block;
+        }
+
+        .final-block .final-video-wrapper .fullscreen-btn {
+            position: absolute;
+            bottom: 60px;
+            right: 15px;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(5px);
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .final-block .final-video-wrapper .fullscreen-btn:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .final-block .final-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .final-block .final-buttons .btn-watch-final {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .final-block .final-buttons .btn-watch-final:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+        }
+
+        /* ====== БИЛЕТЫ (УМЕНЬШЕННЫЕ) ====== */
+        .final-block .final-tickets {
+            margin-top: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 30px;
+            padding: 20px 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            display: block;
+        }
+
+        .final-block .final-tickets h3 {
+            color: #f6d365;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+
+        .final-block .final-tickets .tickets-grid {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .final-block .final-tickets .ticket-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 130px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .final-block .final-tickets .ticket-item:hover {
+            transform: scale(1.05);
+            border-color: #f6d365;
+        }
+
+        .final-block .final-tickets .ticket-item img {
+            width: 100%;
+            border-radius: 10px;
+            display: block;
+            max-height: 140px;
+            object-fit: cover;
+        }
+
+        .final-block .final-tickets .ticket-item .ticket-label {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.65rem;
+            margin-top: 4px;
+        }
+
+        .final-block .final-tickets .ticket-item .zoom-hint {
+            position: absolute;
+            bottom: 38px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 0.55rem;
+            padding: 2px 8px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+
+        .final-block .final-tickets .ticket-item:hover .zoom-hint {
+            opacity: 1;
+        }
+
+        .final-block .final-tickets .ticket-desc {
+            color: #f6d365;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .final-block .close-final {
+            margin-top: 20px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .final-block .close-final:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .return-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+            display: none;
+        }
+
+        .return-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+        }
+
+        .return-btn.show {
+            display: block;
+            animation: fadeInUp 0.3s;
+        }
+
+        .ticket-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.92);
+            z-index: 1000000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding: 20px;
+        }
+
+        .ticket-modal.active {
+            display: flex;
+        }
+
+        .ticket-modal-content {
+            max-width: 85%;
+            max-height: 85vh;
+            background: transparent;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: fadeInUp 0.3s;
+        }
+
+        .ticket-modal-content img {
+            width: 100%;
+            height: auto;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .ticket-modal .close-ticket-modal {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            z-index: 1000001;
+            transition: all 0.3s;
+            background: none;
+            border: none;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .ticket-modal .close-ticket-modal:hover {
+            transform: rotate(90deg);
+            color: #f093fb;
+        }
+
+        @media (max-width: 768px) {
+            .hero-card { padding: 30px 20px; }
+            .hero h1 { font-size: 1.8rem; }
+            .hidden-emoji { font-size: 2rem; padding: 3px 6px; }
+            .quote-popup { padding: 25px 20px; }
+            .music-popup { padding: 25px 20px; }
+            .lsp-popup { padding: 25px 20px; }
+            .photo-tall { max-width: 150px; }
+            .photo-wide { max-width: 300px; }
+            .photo-large { max-width: 300px; }
+            .photo-medium { max-width: 200px; }
+            .photo-square { max-width: 180px; }
+            .flex-around { gap: 15px; }
+            .photo-modal .close-photo-modal {
+                top: 15px;
+                right: 20px;
+                font-size: 2rem;
+            }
+            .final-block .final-title {
+                font-size: 2rem;
+            }
+            .final-block .final-subtitle {
+                font-size: 0.95rem;
+            }
+            .final-block .final-tickets {
+                padding: 15px;
+            }
+            .final-block .final-tickets .ticket-item {
+                max-width: 110px;
+            }
+            .final-block .final-tickets .ticket-item img {
+                max-height: 100px;
+            }
+            .return-btn {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 18px;
+                font-size: 0.8rem;
+            }
+            .ticket-modal .close-ticket-modal {
+                top: 15px;
+                right: 20px;
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-container">
+    <div class="progress-text">🔍 Ищи эмодзи!</div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="secret-counter" id="counter">0 / 25</div>
+</div>
+
+<div class="photo-modal" id="photoModal" onclick="closePhotoModal()">
+    <button class="close-photo-modal" onclick="closePhotoModal(event)">✕</button>
+    <div class="photo-modal-content" onclick="event.stopPropagation()">
+        <img id="modalPhotoImage" src="" alt="Фото">
+    </div>
+</div>
+
+<div class="quote-overlay" id="quoteOverlay"></div>
+
+<div class="quote-popup" id="quotePopup">
+    <div class="emoji-display" id="popupEmoji">🌸</div>
+    <div class="quote-text" id="popupQuote">"Ты — самая лучшая!"</div>
+    <div class="popup-image" id="popupImage">
+        <img src="pizdui.jpg" alt="Пиздуй спать">
+    </div>
+    <div class="hint-text">💡 Угадай, кто это сказал? Нажми "Смотреть видео", чтобы узнать!</div>
+    <div class="btn-group">
+        <button class="btn-close-quote" id="closeQuoteBtn">Закрыть</button>
+        <button class="btn-watch-video" id="watchVideoBtn">🎬 Смотреть видео</button>
+    </div>
+</div>
+
+<div class="music-overlay" id="musicOverlay"></div>
+
+<div class="music-popup" id="musicPopup">
+    <div class="emoji-display" id="musicEmoji">🌸</div>
+    <div class="quote-text" id="musicQuote">"Ты — самая лучшая!"</div>
+    <div class="music-label" id="musicLabel">🎵 Исполнитель — Трек</div>
+    <button class="play-btn" id="playMusicBtn">▶ Включить песню</button>
+    <div class="music-player" id="musicPlayer" style="display: none;">
+        <input type="range" id="musicProgress" min="0" max="100" value="0">
+        <div class="time-info">
+            <span id="musicCurrentTime">0:00</span>
+            <span id="musicDuration">0:00</span>
+        </div>
+        <div class="controls-row">
+            <span class="volume-icon" id="musicVolumeIcon">🔊</span>
+            <div class="volume-slider">
+                <input type="range" id="musicVolume" min="0" max="1" step="0.01" value="0.8">
+            </div>
+        </div>
+    </div>
+    <audio id="musicAudio" style="display: none;"></audio>
+    <div class="hint-text">💡 Угадай, кто это сказал? Нажми "Смотреть видео", чтобы узнать!</div>
+    <div class="btn-group">
+        <button class="btn-close-music" id="closeMusicBtn">Закрыть</button>
+        <button class="btn-watch-video-music" id="watchVideoMusicBtn">🎬 Смотреть видео</button>
+    </div>
+</div>
+
+<div class="lsp-overlay" id="lspOverlay"></div>
+
+<div class="lsp-popup" id="lspPopup">
+    <div class="emoji-display" id="lspEmoji">🌹</div>
+    <div class="quote-text" id="lspQuote">"Вчера фреш сегодня треш, включите мне ЛСП!"</div>
+    <div class="poem-text">
+        Мария — лучшее имя,<br>
+        имя света и радости летом.<br>
+        Имя комфорта, дома,<br>
+        ты словно как Прима в театре балета.<br>
+        <br>
+        Маши лучше в мире нет.<br>
+        Если у меня спросят —<br>
+        есть ли у меня подруга Маша,<br>
+        я им просто улыбнусь в ответ.
+    </div>
+    <div class="music-label">🎵 Нервы — «Счастье»</div>
+    <button class="play-btn" id="playLspBtn">▶ Включить песню</button>
+    <div class="music-player" id="lspPlayer" style="display: none;">
+        <input type="range" id="lspProgress" min="0" max="100" value="0">
+        <div class="time-info">
+            <span id="lspCurrentTime">0:00</span>
+            <span id="lspDuration">0:00</span>
+        </div>
+        <div class="controls-row">
+            <span class="volume-icon" id="lspVolumeIcon">🔊</span>
+            <div class="volume-slider">
+                <input type="range" id="lspVolume" min="0" max="1" step="0.01" value="0.8">
+            </div>
+        </div>
+    </div>
+    <audio id="lspAudio" style="display: none;">
+        <source src="nervy-schastie.mp3" type="audio/mpeg">
+    </audio>
+    <div class="hint-text">💡 Угадай, кто это сказал? Нажми на видео, чтобы узнать!</div>
+    <div class="btn-group">
+        <button class="btn-close-lsp" id="closeLspBtn">Закрыть</button>
+        <button class="btn-watch-video-lsp" id="watchVideoLspBtn">🎬 Видео</button>
+        <button class="btn-watch-edit-lsp" id="watchEditLspBtn">🎥 Эдит</button>
+    </div>
+</div>
+
+<div class="video-modal" id="videoModal">
+    <div class="video-modal-content">
+        <h3 id="videoFriendName">📹 Видео-послание</h3>
+        <div id="videoContainer">
+            <video id="modalVideo" controls>
+                <source src="" type="video/mp4">
+            </video>
+            <div id="videoError" class="video-error" style="display: none;">
+                😕 Видео пока не загружено<br>
+                <span style="font-size: 0.8rem; color: #999;">Скоро здесь будет послание!</span>
+            </div>
+        </div>
+        <button class="close-video" id="closeVideoBtn">Закрыть</button>
+    </div>
+</div>
+
+<div class="final-block" id="finalBlock">
+    <div class="final-emoji" id="finalHeart">💝</div>
+    <div class="final-title">Марусёночек ❤️</div>
+    <div class="final-subtitle">Ты прошла весь путь. Вот твой подарок 🎁</div>
+    
+    <div class="final-music-controls">
+        <button class="final-play-btn" id="finalPlayBtn">🎵 Включить песню Iris</button>
+        <div class="final-music-player" id="finalMusicPlayer">
+            <input type="range" id="finalProgress" min="0" max="100" value="0">
+            <div class="time-info">
+                <span id="finalCurrentTime">0:00</span>
+                <span id="finalDuration">0:00</span>
+            </div>
+            <div class="controls-row">
+                <span class="volume-icon" id="finalVolumeIcon">🔊</span>
+                <div class="volume-slider">
+                    <input type="range" id="finalVolume" min="0" max="1" step="0.01" value="0.8">
+                </div>
+                <button class="final-stop-btn" id="finalStopBtn">⏹ Остановить</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="final-buttons">
+        <button class="btn-watch-final" id="watchFinalBtn">🎬 Смотреть видео</button>
+    </div>
+
+    <div class="final-video-wrapper" id="finalVideoWrapper">
+        <video id="finalVideo" controls>
+            <source src="final.mp4" type="video/mp4">
+        </video>
+        <button class="fullscreen-btn" id="fullscreenBtn" title="Полный экран">⛶</button>
+    </div>
+
+    <div class="final-tickets" id="finalTickets">
+        <h3>🎫 Твой подарок — два билета на концерт! 🎫</h3>
+        <div class="tickets-grid">
+            <div class="ticket-item" onclick="openTicketModal('ticket1.png')">
+                <img src="ticket1.png" alt="Билет 1" id="ticket1Img" onerror="this.src='ticket1.jpg'">
+                <span class="ticket-label">Твой билет</span>
+                <span class="zoom-hint">🔍 Нажми, чтобы увеличить</span>
+            </div>
+            <div class="ticket-item" onclick="openTicketModal('ticket2.png')">
+                <img src="ticket2.png" alt="Билет 2" id="ticket2Img" onerror="this.src='ticket2.jpg'">
+                <span class="ticket-label">Мой билет</span>
+                <span class="zoom-hint">🔍 Нажми, чтобы увеличить</span>
+            </div>
+        </div>
+        <p class="ticket-desc">🎵 Идём вместе! 🎵</p>
+    </div>
+
+    <button class="close-final" id="closeFinalBtn">✨ Закрыть ✨</button>
+</div>
+
+<!-- Модалка для увеличения билета -->
+<div class="ticket-modal" id="ticketModal" onclick="closeTicketModal()">
+    <button class="close-ticket-modal" onclick="closeTicketModal(event)">✕</button>
+    <div class="ticket-modal-content" onclick="event.stopPropagation()">
+        <img id="ticketModalImage" src="" alt="Билет">
+    </div>
+</div>
+
+<!-- Кнопка "Вернуться в финал" -->
+<button class="return-btn" id="returnBtn">💝 Вернуться в финал</button>
+
+<div class="main-container">
+    <section class="hero">
+        <div class="hero-card">
+            <h1>С днём рождения, Любимая 💖</h1>
+            <div class="hero-date">🎂 9 июля — Твой день! 🎂</div>
+            <div class="hero-text">
+                <strong>🔍 25 секретов ждут тебя!</strong><br>
+                Листай вниз, ищи эмодзи глазами, читай цитаты и <strong>угадывай, кто это сказал</strong>!<br>
+                <span style="font-size: 0.85rem; color: #999;">Кликай на любой эмодзи, который найдёшь</span>
+            </div>
+            <button class="btn-start" id="startBtn">🔍 Начать поиск!</button>
+        </div>
+    </section>
+
+    <div class="flex-around">
+        <div class="photo-item photo-large photo-tilt-left" onclick="openPhotoModal('foto1.jpg')">
+            <div class="photo-content"><img src="foto1.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-large photo-tilt-right" onclick="openPhotoModal('foto2.jpg')">
+            <div class="photo-content"><img src="foto2.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-large photo-tilt-crazy" onclick="openPhotoModal('foto3.jpg')">
+            <div class="photo-content"><img src="foto3.jpg" alt="Фото"></div>
+        </div>
+    </div>
+
+    <div class="text-block">
+        <p>
+            ✨ Сегодня тот самый день — день, когда появилась ты. Спасибо, что ты есть в этом мире, в моей жизни. Я безмерно благодарен за каждую минуту, подаренную рядом с тобой. ❤️
+            <span class="hidden-emoji" data-id="0">🌷</span>
+        </p>
+        <p>
+            Ты — невероятная. Твоя улыбка способна согреть даже самые холодные дни, а твоя доброта делает этот мир лучше. Спасибо, что ты — это ты. 
+            <span class="hidden-emoji" data-id="1">🌻</span>
+        </p>
+        <p>
+            Пусть этот день запомнится тебе как самый тёплый и волшебный. 
+            <span class="hidden-emoji" data-id="2">🌺</span>
+        </p>
+    </div>
+
+    <div class="flex-around">
+        <div class="photo-item photo-square photo-tilt-more" onclick="openPhotoModal('foto4.jpg')">
+            <div class="photo-content"><img src="foto4.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-small photo-tilt-slight-right" onclick="openPhotoModal('foto5.jpg')">
+            <div class="photo-content"><img src="foto5.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-square photo-tilt-heavy" onclick="openPhotoModal('foto6.jpg')">
+            <div class="photo-content"><img src="foto6.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-small photo-tilt-less" onclick="openPhotoModal('foto7.jpg')">
+            <div class="photo-content"><img src="foto7.jpg" alt="Фото"></div>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 20px 0;">
+        <span style="font-size: 0.9rem; color: #999; display: block; margin-bottom: 10px;">🎥 Нажми на эмодзи и узнай, что тебя ждёт</span>
+        <span class="hidden-emoji" data-id="17" style="font-size: 3rem;">🎬</span>
+        <span class="hidden-emoji" data-id="18" style="font-size: 3rem;">📹</span>
+    </div>
+
+    <div style="text-align: center; padding: 20px 0;">
+        <span class="hidden-emoji" data-id="21" style="font-size: 3rem;">🎥</span>
+        <span class="hidden-emoji" data-id="22" style="font-size: 3rem;">📽️</span>
+        <span class="hidden-emoji" data-id="23" style="font-size: 3rem;">🎞️</span>
+        <span class="hidden-emoji" data-id="24" style="font-size: 3rem;">📀</span>
+    </div>
+
+    <div style="text-align: center; padding: 10px 0;">
+        <span class="hidden-emoji" data-id="19" style="font-size: 3rem;">⭐</span>
+        <span class="hidden-emoji" data-id="20" style="font-size: 3rem;">🌟</span>
+    </div>
+
+    <div class="big-emoji-row">
+        <span class="hidden-emoji" data-id="3">🌹</span>
+        <span class="hidden-emoji" data-id="4">🌸</span>
+        <span class="hidden-emoji" data-id="5">🌼</span>
+    </div>
+
+    <div class="flex-around">
+        <div class="photo-item photo-wide photo-tilt-right" onclick="openPhotoModal('foto8.jpg')">
+            <div class="photo-content"><img src="foto8.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-wide photo-tilt-left" onclick="openPhotoModal('foto9.jpg')">
+            <div class="photo-content"><img src="foto9.jpg" alt="Фото"></div>
+        </div>
+    </div>
+
+    <div class="text-block">
+        <p>
+            Ты — моё самое ценное сокровище. 
+            <span class="hidden-emoji" data-id="6">🐱</span>
+        </p>
+        <p>
+            Твои глаза, твоя улыбка, твой смех — всё это делает меня счастливым. Я хочу, чтобы ты знала: ты — самая важная часть моей жизни. 
+            <span class="hidden-emoji" data-id="7">🐶</span>
+        </p>
+        <p>
+            Судьба подарила мне тебя, и я бесконечно благодарен ей за это. Ты — моя муза, моё вдохновение, моя любовь. 
+            <span class="hidden-emoji" data-id="8">🦊</span>
+        </p>
+    </div>
+
+    <div class="flex-around">
+        <div class="photo-item photo-tall photo-tilt-heavy" onclick="openPhotoModal('foto10.jpg')">
+            <div class="photo-content"><img src="foto10.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-square photo-tilt-more" onclick="openPhotoModal('foto11.jpg')">
+            <div class="photo-content"><img src="foto11.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-tall photo-tilt-right" onclick="openPhotoModal('foto12.jpg')">
+            <div class="photo-content"><img src="foto12.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-square photo-tilt-slight" onclick="openPhotoModal('foto13.jpg')">
+            <div class="photo-content"><img src="foto13.jpg" alt="Фото"></div>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 15px 0;">
+        <span class="hidden-emoji" data-id="9">🐼</span>
+        <span class="hidden-emoji" data-id="10">🦄</span>
+        <span class="hidden-emoji" data-id="11">🐨</span>
+    </div>
+
+    <div class="flex-around">
+        <div class="photo-item photo-medium photo-tilt-none" onclick="openPhotoModal('foto14.jpg')">
+            <div class="photo-content"><img src="foto14.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-medium photo-tilt-left" onclick="openPhotoModal('foto15.jpg')">
+            <div class="photo-content"><img src="foto15.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-medium photo-tilt-right" onclick="openPhotoModal('foto16.jpg')">
+            <div class="photo-content"><img src="foto16.jpg" alt="Фото"></div>
+        </div>
+    </div>
+
+    <div class="text-block">
+        <p>
+            Сегодня я хочу сделать этот день незабываемым для тебя. Ты заслуживаешь всего самого лучшего, потому что ты — самая лучшая. 
+            <span class="hidden-emoji" data-id="12">🍕</span>
+        </p>
+        <p>
+            Пусть этот год принесёт тебе море счастья, океан любви и бесконечную радость. Я всегда буду рядом, что бы ни случилось. 
+            <span class="hidden-emoji" data-id="13">🍣</span>
+        </p>
+        <p>
+            Ты — моё всё. С днём рождения, моя любимая, самая красивая и самая родная. 
+            <span class="hidden-emoji" data-id="14">🍩</span>
+        </p>
+    </div>
+
+    <div class="flex-around">
+        <div class="photo-item photo-square photo-tilt-slight" onclick="openPhotoModal('foto17.jpg')">
+            <div class="photo-content"><img src="foto17.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-small photo-tilt-heavy" onclick="openPhotoModal('foto18.jpg')">
+            <div class="photo-content"><img src="foto18.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-square photo-tilt-right" onclick="openPhotoModal('foto19.jpg')">
+            <div class="photo-content"><img src="foto19.jpg" alt="Фото"></div>
+        </div>
+        <div class="photo-item photo-small photo-tilt-left" onclick="openPhotoModal('foto20.jpg')">
+            <div class="photo-content"><img src="foto20.jpg" alt="Фото"></div>
+        </div>
+    </div>
+
+    <div class="flex-center">
+        <div class="photo-item photo-wide photo-tilt-crazy" onclick="openPhotoModal('foto21.jpg')">
+            <div class="photo-content"><img src="foto21.jpg" alt="Фото"></div>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 30px 0 15px 0;">
+        <div style="display: flex; justify-content: center;">
+            <span class="hidden-emoji" data-id="15">🍰</span>
+            <span class="hidden-emoji" data-id="16" style="font-size: 4rem;">🍦</span>
+        </div>
+    </div>
+
+    <div class="text-block" style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; text-align: center;">
+        <p style="font-size: 1.2rem; color: #f093fb;">
+            💡 Подсказка 💡
+        </p>
+        <p style="color: #ccc;">
+            Все 25 эмодзи разбросаны по всему сайту!<br>
+            Ищи их везде — в тексте, между строчек, в центре внимания 👀
+        </p>
+        <div style="font-size: 2rem; margin-top: 15px;">
+            🔍 👀 💪 🎯
+        </div>
+    </div>
+
+    <div class="footer">
+        💝 Найди все 25 эмодзи! Читай цитаты, угадывай друзей и смотри видео! 💝
+    </div>
+</div>
+
+<script>
+    function openPhotoModal(imageSrc) {
+        const modal = document.getElementById('photoModal');
+        const img = document.getElementById('modalPhotoImage');
+        img.src = imageSrc;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePhotoModal(event) {
+        if (event) event.stopPropagation();
+        const modal = document.getElementById('photoModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closePhotoModal();
+        }
+    });
+
+    // ====== УВЕЛИЧЕНИЕ БИЛЕТА ======
+    function openTicketModal(imageSrc) {
+        const modal = document.getElementById('ticketModal');
+        const img = document.getElementById('ticketModalImage');
+        img.src = imageSrc;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeTicketModal(event) {
+        if (event) event.stopPropagation();
+        const modal = document.getElementById('ticketModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeTicketModal();
+        }
+    });
+
+    // ====== ВОЗВРАТ В ФИНАЛЬНОЕ ОКНО ======
+    const returnBtn = document.getElementById('returnBtn');
+    const finalBlock = document.getElementById('finalBlock');
+    let finalWasClosed = false;
+
+    document.getElementById('closeFinalBtn').addEventListener('click', function() {
+        finalBlock.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        finalWasClosed = true;
+        returnBtn.classList.add('show');
+        const video = document.getElementById('finalVideo');
+        video.pause();
+        video.currentTime = 0;
+        if (finalMusicPlaying && finalAudio) {
+            finalAudio.pause();
+            finalMusicPlaying = false;
+            document.getElementById('finalPlayBtn').innerHTML = '🎵 Включить песню Iris';
+            document.getElementById('finalMusicPlayer').classList.remove('active');
+        }
+    });
+
+    returnBtn.addEventListener('click', function() {
+        finalBlock.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        returnBtn.classList.remove('show');
+        finalWasClosed = false;
+        showToast('💝 Ты снова в финале!', 2000);
+    });
+
+    const friendsData = [
+        { emoji: "🌷", quote: "«Королева пентаклей»", video: "video1.mp4", music: "kajdiy_den_hochesh_seks.mp3", musicLabel: "🎵 Каждый день хочешь секс будто ты голодный" },
+        { emoji: "🌻", quote: "«Не путай текилу с водой»", video: "video2.mp4", music: "140.mp3", musicLabel: "🎵 140" },
+        { emoji: "🌺", quote: "«Что за макароны ты мне приготовил? Я люблю покушать блюда фуа-гра! Гречка или мясо - тоже не подходят. Подавай мне устриц, или всё пока!»", video: "video3.mp4", music: "klub_romantiki.mp3", musicLabel: "🎵 Клуб романтики" },
+        { emoji: "🌹", quote: "«Вчера фреш сегодня треш, включите мне ЛСП!»", video: "video4.mp4", editVideo: "edit.mp4", isLsp: true },
+        { emoji: "🌸", quote: "«Мы с тобой на карше, Мчим к бизонам по шоссе»", video: "video5.mp4", music: "yarche_i_teplee.mp3", musicLabel: "🎵 Ярче и теплее" },
+        { emoji: "🌼", quote: "«Мой любимый цветочек»", video: "video6.mp4", music: "dolce_gabbana.mp3", musicLabel: "🎵 Дольче Габана" },
+        { emoji: "🐱", quote: "«Пиздуй спать»", video: "video7.mp4", music: "g.u.y.mp3", musicLabel: "🎵 G.U.Y" },
+        { emoji: "🐶", quote: "«Маня»", video: "video8.mp4", music: "selfharm.mp3", musicLabel: "🎵 Селфхарм" },
+        { emoji: "🦊", quote: "«Маш, я обожаю, когда ты пьяная»", video: "video9.mp4", music: "stuck.mp3", musicLabel: "🎵 Stuck" },
+        { emoji: "🐼", quote: "«Маш, я ко второму»", video: "video10.mp4", music: "make_you_mine.mp3", musicLabel: "🎵 Make You Mine" },
+        { emoji: "🦄", quote: "«Хохотушка Маша, хочу гулять с тобой каждое 3 января до конца жизни!»", video: "video11.mp4", music: "v_klube.mp3", musicLabel: "🎵 В клубе" },
+        { emoji: "🐨", quote: "«шлёпнуться»", video: "video12.mp4", music: "samaya_krasivaya.mp3", musicLabel: "🎵 Самая красивая" },
+        { emoji: "🍕", quote: "«Мой любимый бар \"Хлебник\"»", video: "video13.mp4", music: "this_love.mp3", musicLabel: "🎵 This Love" },
+        { emoji: "🍣", quote: "«Анапа 2007»", video: "video14.mp4", music: "seks_po_piterski.mp3", musicLabel: "🎵 Секс По-питерски" },
+        { emoji: "🍩", quote: "«Бусинки-хуюсинки»", video: "video15.mp4", music: "moya_lyubov_na_pytom_etazhe.mp3", musicLabel: "🎵 Моя любовь на пятом этаже" },
+        { emoji: "🍰", quote: "«Директор по пакетикам»", video: "video16.mp4", music: "you_are_beautiful.mp3", musicLabel: "🎵 You are Beautiful" },
+        { emoji: "🍦", quote: "«Йога ретрит, Машка храпит!»", video: "video17.mp4", music: "v_kamine_v_6_utra.mp3", musicLabel: "🎵 В камине в 6 утра" },
+        { emoji: "🎬", quote: null, video: "video18.mp4" },
+        { emoji: "📹", quote: null, video: "video19.mp4" },
+        { emoji: "⭐", quote: "«Лада седан - баклажан»", video: "video20.mp4", music: "eksponat.mp3", musicLabel: "🎵 Экспонат" },
+        { emoji: "🌟", quote: null, video: "video21.mp4" },
+        { emoji: "🎥", quote: null, video: "video22.mp4" },
+        { emoji: "📽️", quote: null, video: "video23.mp4" },
+        { emoji: "🎞️", quote: null, video: "video24.mp4" },
+        { emoji: "📀", quote: null, video: "video25.mp4" }
+    ];
+
+    let watchedVideos = {};
+    friendsData.forEach((f, i) => {
+        if (f.isLsp) {
+            watchedVideos[i] = { main: false, edit: false };
+        } else {
+            watchedVideos[i] = false;
+        }
+    });
+
+    let totalFound = 0;
+    let finalShown = false;
+
+    function updateProgress() {
+        let foundCount = 0;
+        for (let i = 0; i < friendsData.length; i++) {
+            const f = friendsData[i];
+            if (f.isLsp) {
+                if (watchedVideos[i] && watchedVideos[i].main && watchedVideos[i].edit) foundCount++;
+            } else {
+                if (watchedVideos[i] === true) foundCount++;
+            }
+        }
+        totalFound = foundCount;
+        const percent = (totalFound / 25) * 100;
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('counter').innerHTML = `${totalFound} / 25`;
+        
+        if (totalFound === 25 && !finalShown) {
+            finalShown = true;
+            setTimeout(() => {
+                showFinalBlock();
+            }, 1000);
+        }
+    }
+
+    function showFinalBlock() {
+        finalBlock.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        showToast('💝 Ты нашла всё! Тебя ждёт финал!', 4000);
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => createFloatingHeart(), i * 80);
+        }
+    }
+
+    // ====== ПУЛЬСИРУЮЩЕЕ СЕРДЦЕ ======
+    document.getElementById('finalHeart').addEventListener('click', function(e) {
+        const emojis = ['❤️', '💖', '💕', '💗', '💝', '✨', '💘', '💓'];
+        const rect = this.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        
+        for (let i = 0; i < 25; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'burst-heart';
+            heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            const angle = Math.random() * 2 * Math.PI;
+            const distance = 80 + Math.random() * 200;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance - 50;
+            heart.style.setProperty('--tx', tx + 'px');
+            heart.style.setProperty('--ty', ty + 'px');
+            heart.style.left = (cx + (Math.random() - 0.5) * 20) + 'px';
+            heart.style.top = (cy + (Math.random() - 0.5) * 20) + 'px';
+            heart.style.fontSize = (1.2 + Math.random() * 1.5) + 'rem';
+            heart.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 2000);
+        }
+        
+        if (navigator.vibrate) navigator.vibrate(50);
+    });
+
+    // ====== МУЗЫКА ======
+    let finalMusicPlaying = false;
+    let finalAudio = null;
+
+    function setupFinalMusicPlayer() {
+        const progress = document.getElementById('finalProgress');
+        const currentTimeEl = document.getElementById('finalCurrentTime');
+        const durationEl = document.getElementById('finalDuration');
+        const volumeSlider = document.getElementById('finalVolume');
+        const volumeIcon = document.getElementById('finalVolumeIcon');
+
+        if (!finalAudio) return;
+
+        finalAudio.addEventListener('loadedmetadata', function() {
+            const dur = finalAudio.duration;
+            if (!isNaN(dur)) {
+                durationEl.textContent = formatTime(dur);
+                progress.max = Math.floor(dur);
+            }
+        });
+
+        finalAudio.addEventListener('timeupdate', function() {
+            const current = finalAudio.currentTime;
+            currentTimeEl.textContent = formatTime(current);
+            if (!isNaN(finalAudio.duration)) {
+                progress.value = current;
+            }
+        });
+
+        progress.addEventListener('input', function() {
+            if (finalAudio) {
+                finalAudio.currentTime = this.value;
+            }
+        });
+
+        volumeSlider.addEventListener('input', function() {
+            if (finalAudio) {
+                finalAudio.volume = this.value;
+                updateVolumeIcon(finalAudio.volume, volumeIcon);
+            }
+        });
+
+        volumeIcon.addEventListener('click', function() {
+            if (!finalAudio) return;
+            if (finalAudio.volume > 0) {
+                finalAudio.volume = 0;
+                volumeSlider.value = 0;
+                this.textContent = '🔇';
+            } else {
+                finalAudio.volume = 0.8;
+                volumeSlider.value = 0.8;
+                this.textContent = '🔊';
+            }
+        });
+    }
+
+    document.getElementById('finalPlayBtn').addEventListener('click', function() {
+        const player = document.getElementById('finalMusicPlayer');
+        
+        if (finalMusicPlaying && finalAudio) {
+            finalAudio.pause();
+            finalMusicPlaying = false;
+            this.innerHTML = '🎵 Включить песню Iris';
+            player.classList.remove('active');
+            return;
+        }
+        
+        finalAudio = new Audio('iris.mp3');
+        finalAudio.load();
+        setupFinalMusicPlayer();
+        
+        finalAudio.play()
+            .then(() => {
+                finalMusicPlaying = true;
+                this.innerHTML = '⏹ Остановить песню';
+                player.classList.add('active');
+                document.getElementById('finalDuration').textContent = formatTime(finalAudio.duration);
+                showToast('🎵 Iris — Goo Goo Dolls', 2000);
+            })
+            .catch((e) => {
+                showToast('❌ Песня не найдена! Проверь файл iris.mp3', 3000);
+                console.log('Ошибка аудио:', e);
+            });
+    });
+
+    document.getElementById('finalStopBtn').addEventListener('click', function() {
+        if (finalAudio) {
+            finalAudio.pause();
+            finalAudio.currentTime = 0;
+        }
+        finalMusicPlaying = false;
+        document.getElementById('finalPlayBtn').innerHTML = '🎵 Включить песню Iris';
+        document.getElementById('finalMusicPlayer').classList.remove('active');
+    });
+
+    document.getElementById('watchFinalBtn').addEventListener('click', function() {
+        const wrapper = document.getElementById('finalVideoWrapper');
+        wrapper.classList.add('active');
+        const video = document.getElementById('finalVideo');
+        video.load();
+        video.play().catch(() => {});
+        this.style.display = 'none';
+        showToast('🎬 Смотри финальное видео!', 3000);
+    });
+
+    document.getElementById('fullscreenBtn').addEventListener('click', function() {
+        const video = document.getElementById('finalVideo');
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) {
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) {
+            video.msRequestFullscreen();
+        }
+    });
+
+    function showToast(msg, duration = 3000) {
+        const old = document.querySelector('.toast');
+        if (old) old.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), duration);
+    }
+
+    function createFloatingHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        const emojis = ['❤️', '💖', '💕', '💗', '💝', '✨', '🎉', '🌟', '🎊'];
+        heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.bottom = '0px';
+        heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+    }
+
+    function findFriendByEmoji(emoji) {
+        for (let i = 0; i < friendsData.length; i++) {
+            if (friendsData[i].emoji === emoji) return i;
+        }
+        return -1;
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds) || !isFinite(seconds)) return '0:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function updateVolumeIcon(volume, icon) {
+        if (volume === 0) {
+            icon.textContent = '🔇';
+        } else if (volume < 0.3) {
+            icon.textContent = '🔈';
+        } else if (volume < 0.7) {
+            icon.textContent = '🔉';
+        } else {
+            icon.textContent = '🔊';
+        }
+    }
+
+    function setupMusicPlayer(audio, progress, currentTimeEl, durationEl, volumeSlider, volumeIcon) {
+        audio.addEventListener('loadedmetadata', function() {
+            const dur = audio.duration;
+            if (!isNaN(dur)) {
+                durationEl.textContent = formatTime(dur);
+                progress.max = Math.floor(dur);
+            }
+        });
+        audio.addEventListener('timeupdate', function() {
+            const current = audio.currentTime;
+            currentTimeEl.textContent = formatTime(current);
+            if (!isNaN(audio.duration)) {
+                progress.value = current;
+            }
+        });
+        progress.addEventListener('input', function() {
+            audio.currentTime = this.value;
+        });
+        volumeSlider.addEventListener('input', function() {
+            audio.volume = this.value;
+            updateVolumeIcon(audio.volume, volumeIcon);
+        });
+        volumeIcon.addEventListener('click', function() {
+            if (audio.volume > 0) {
+                audio.volume = 0;
+                volumeSlider.value = 0;
+                this.textContent = '🔇';
+            } else {
+                audio.volume = 0.8;
+                volumeSlider.value = 0.8;
+                this.textContent = '🔊';
+            }
+        });
+    }
+
+    function showQuote(emoji, element) {
+        const friendId = findFriendByEmoji(emoji);
+        if (friendId === -1) return;
+        currentFriendId = friendId;
+        const friend = friendsData[friendId];
+        if (friend.quote === null) {
+            showVideo(friendId);
+            return;
+        }
+        if (friend.isLsp) {
+            showLspPopup(friendId);
+            return;
+        }
+        if (friend.music) {
+            showMusicPopup(friendId);
+            return;
+        }
+        
+        document.getElementById('quoteOverlay').style.display = 'flex';
+        document.getElementById('quotePopup').style.display = 'block';
+        document.getElementById('popupEmoji').innerHTML = friend.emoji;
+        document.getElementById('popupQuote').innerHTML = friend.quote;
+        
+        const imageDiv = document.getElementById('popupImage');
+        if (friend.emoji === '🐱') {
+            imageDiv.style.display = 'block';
+        } else {
+            imageDiv.style.display = 'none';
+        }
+        
+        document.getElementById('watchVideoBtn').setAttribute('data-id', friendId);
+        if (navigator.vibrate) navigator.vibrate(50);
+        showToast(`💬 Найдена цитата! Угадай, кто это сказал?`, 2500);
+    }
+
+    let currentFriendId = -1;
+
+    function showMusicPopup(friendId) {
+        const friend = friendsData[friendId];
+        document.getElementById('musicOverlay').style.display = 'flex';
+        document.getElementById('musicPopup').style.display = 'block';
+        document.getElementById('musicEmoji').innerHTML = friend.emoji;
+        document.getElementById('musicQuote').innerHTML = friend.quote;
+        document.getElementById('musicLabel').innerHTML = friend.musicLabel || '🎵 Музыка';
+        document.getElementById('watchVideoMusicBtn').setAttribute('data-id', friendId);
+        const audio = document.getElementById('musicAudio');
+        const progress = document.getElementById('musicProgress');
+        const currentTimeEl = document.getElementById('musicCurrentTime');
+        const durationEl = document.getElementById('musicDuration');
+        const volumeSlider = document.getElementById('musicVolume');
+        const volumeIcon = document.getElementById('musicVolumeIcon');
+        const player = document.getElementById('musicPlayer');
+        audio.src = friend.music;
+        audio.load();
+        player.style.display = 'none';
+        document.getElementById('playMusicBtn').innerHTML = '▶ Включить песню';
+        isMusicPlaying = false;
+        setupMusicPlayer(audio, progress, currentTimeEl, durationEl, volumeSlider, volumeIcon);
+        if (navigator.vibrate) navigator.vibrate(50);
+        showToast(`🎵 Нажми «Включить песню», чтобы услышать трек!`, 3000);
+    }
+
+    let isMusicPlaying = false;
+
+    document.getElementById('playMusicBtn').addEventListener('click', function() {
+        const audio = document.getElementById('musicAudio');
+        const player = document.getElementById('musicPlayer');
+        const progress = document.getElementById('musicProgress');
+        if (isMusicPlaying) {
+            audio.pause();
+            isMusicPlaying = false;
+            this.innerHTML = '▶ Включить песню';
+            return;
+        }
+        audio.play()
+            .then(() => {
+                isMusicPlaying = true;
+                this.innerHTML = '⏹ Остановить';
+                player.style.display = 'block';
+                progress.max = Math.floor(audio.duration) || 100;
+                showToast(`🎵 Играет...`, 1500);
+            })
+            .catch((e) => {
+                showToast('❌ Песня не найдена! Проверь файл', 3000);
+                console.log('Ошибка аудио:', e);
+            });
+    });
+
+    function showLspPopup(friendId) {
+        const friend = friendsData[friendId];
+        document.getElementById('lspOverlay').style.display = 'flex';
+        document.getElementById('lspPopup').style.display = 'block';
+        document.getElementById('lspEmoji').innerHTML = friend.emoji;
+        document.getElementById('lspQuote').innerHTML = friend.quote;
+        document.getElementById('watchVideoLspBtn').setAttribute('data-id', friendId);
+        document.getElementById('watchEditLspBtn').setAttribute('data-id', friendId);
+        const audio = document.getElementById('lspAudio');
+        const progress = document.getElementById('lspProgress');
+        const currentTimeEl = document.getElementById('lspCurrentTime');
+        const durationEl = document.getElementById('lspDuration');
+        const volumeSlider = document.getElementById('lspVolume');
+        const volumeIcon = document.getElementById('lspVolumeIcon');
+        const player = document.getElementById('lspPlayer');
+        audio.src = 'nervy-schastie.mp3';
+        audio.load();
+        player.style.display = 'none';
+        document.getElementById('playLspBtn').innerHTML = '▶ Включить песню';
+        isLspPlaying = false;
+        setupMusicPlayer(audio, progress, currentTimeEl, durationEl, volumeSlider, volumeIcon);
+        if (navigator.vibrate) navigator.vibrate(50);
+        showToast(`🎵 Нажми «Включить песню», чтобы услышать трек!`, 3000);
+    }
+
+    let isLspPlaying = false;
+
+    document.getElementById('playLspBtn').addEventListener('click', function() {
+        const audio = document.getElementById('lspAudio');
+        const player = document.getElementById('lspPlayer');
+        const progress = document.getElementById('lspProgress');
+        if (isLspPlaying) {
+            audio.pause();
+            isLspPlaying = false;
+            this.innerHTML = '▶ Включить песню';
+            return;
+        }
+        audio.play()
+            .then(() => {
+                isLspPlaying = true;
+                this.innerHTML = '⏹ Остановить';
+                player.style.display = 'block';
+                progress.max = Math.floor(audio.duration) || 100;
+                showToast('🎵 Нервы — «Счастье» 🔥', 1500);
+            })
+            .catch((e) => {
+                showToast('❌ Песня не найдена! Проверь файл nervy-schastie.mp3', 3000);
+                console.log('Ошибка аудио:', e);
+            });
+    });
+
+    function showVideo(friendId, isEdit = false) {
+        const friend = friendsData[friendId];
+        if (friend.isLsp) {
+            if (isEdit) {
+                watchedVideos[friendId].edit = true;
+            } else {
+                watchedVideos[friendId].main = true;
+            }
+        } else {
+            watchedVideos[friendId] = true;
+        }
+        updateEmojiDisplay(friendId);
+        updateProgress();
+        document.getElementById('quotePopup').style.display = 'none';
+        document.getElementById('quoteOverlay').style.display = 'none';
+        document.getElementById('musicPopup').style.display = 'none';
+        document.getElementById('musicOverlay').style.display = 'none';
+        document.getElementById('lspPopup').style.display = 'none';
+        document.getElementById('lspOverlay').style.display = 'none';
+        const musicAudio = document.getElementById('musicAudio');
+        if (musicAudio) {
+            musicAudio.pause();
+            musicAudio.currentTime = 0;
+        }
+        const lspAudio = document.getElementById('lspAudio');
+        if (lspAudio) {
+            lspAudio.pause();
+            lspAudio.currentTime = 0;
+        }
+        isMusicPlaying = false;
+        isLspPlaying = false;
+        document.getElementById('playMusicBtn').innerHTML = '▶ Включить песню';
+        document.getElementById('playLspBtn').innerHTML = '▶ Включить песню';
+        document.getElementById('musicPlayer').style.display = 'none';
+        document.getElementById('lspPlayer').style.display = 'none';
+        const modal = document.getElementById('videoModal');
+        const modalTitle = document.getElementById('videoFriendName');
+        const modalVideo = document.getElementById('modalVideo');
+        const videoError = document.getElementById('videoError');
+        const videoFile = isEdit ? friend.editVideo : friend.video;
+        modalTitle.innerHTML = isEdit ? `🎥 Эдит для тебя!` : `📹 Видео-послание`;
+        modalVideo.src = videoFile;
+        modalVideo.style.display = 'block';
+        videoError.style.display = 'none';
+        modalVideo.onerror = function() {
+            modalVideo.style.display = 'none';
+            videoError.style.display = 'block';
+        };
+        modalVideo.load();
+        modal.style.display = 'flex';
+        showToast(isEdit ? `🎥 Эдит открылся! Смотри!` : `🎬 Видео открылось! Смотри!`, 3000);
+        createFloatingHeart();
+        createFloatingHeart();
+    }
+
+    function updateEmojiDisplay(friendId) {
+        const friend = friendsData[friendId];
+        let isFullyWatched = false;
+        if (friend.isLsp) {
+            isFullyWatched = watchedVideos[friendId] && watchedVideos[friendId].main && watchedVideos[friendId].edit;
+        } else {
+            isFullyWatched = watchedVideos[friendId] === true;
+        }
+        document.querySelectorAll('.hidden-emoji').forEach(el => {
+            if (el.textContent.trim() === friend.emoji) {
+                if (isFullyWatched) {
+                    el.classList.add('found');
+                    el.innerHTML = friend.emoji + '<span class="check-mark">✅</span>';
+                } else {
+                    el.classList.remove('found');
+                    el.innerHTML = friend.emoji;
+                }
+            }
+        });
+    }
+
+    document.querySelectorAll('.hidden-emoji').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const emoji = el.textContent.trim();
+            const friendId = findFriendByEmoji(emoji);
+            if (friendId === -1) return;
+            showQuote(emoji, el);
+        });
+    });
+
+    document.getElementById('closeQuoteBtn').addEventListener('click', () => {
+        document.getElementById('quotePopup').style.display = 'none';
+        document.getElementById('quoteOverlay').style.display = 'none';
+    });
+
+    document.getElementById('quoteOverlay').addEventListener('click', () => {
+        document.getElementById('quotePopup').style.display = 'none';
+        document.getElementById('quoteOverlay').style.display = 'none';
+    });
+
+    document.getElementById('watchVideoBtn').addEventListener('click', () => {
+        const friendId = parseInt(document.getElementById('watchVideoBtn').getAttribute('data-id'));
+        if (friendId >= 0) {
+            showVideo(friendId);
+        }
+    });
+
+    document.getElementById('closeMusicBtn').addEventListener('click', () => {
+        document.getElementById('musicPopup').style.display = 'none';
+        document.getElementById('musicOverlay').style.display = 'none';
+        const audio = document.getElementById('musicAudio');
+        audio.pause();
+        audio.currentTime = 0;
+        isMusicPlaying = false;
+        document.getElementById('playMusicBtn').innerHTML = '▶ Включить песню';
+        document.getElementById('musicPlayer').style.display = 'none';
+    });
+
+    document.getElementById('musicOverlay').addEventListener('click', () => {
+        document.getElementById('musicPopup').style.display = 'none';
+        document.getElementById('musicOverlay').style.display = 'none';
+        const audio = document.getElementById('musicAudio');
+        audio.pause();
+        audio.currentTime = 0;
+        isMusicPlaying = false;
+        document.getElementById('playMusicBtn').innerHTML = '▶ Включить песню';
+        document.getElementById('musicPlayer').style.display = 'none';
+    });
+
+    document.getElementById('watchVideoMusicBtn').addEventListener('click', () => {
+        const friendId = parseInt(document.getElementById('watchVideoMusicBtn').getAttribute('data-id'));
+        if (friendId >= 0) {
+            showVideo(friendId);
+        }
+    });
+
+    document.getElementById('closeLspBtn').addEventListener('click', () => {
+        document.getElementById('lspPopup').style.display = 'none';
+        document.getElementById('lspOverlay').style.display = 'none';
+        const audio = document.getElementById('lspAudio');
+        audio.pause();
+        audio.currentTime = 0;
+        isLspPlaying = false;
+        document.getElementById('playLspBtn').innerHTML = '▶ Включить песню';
+        document.getElementById('lspPlayer').style.display = 'none';
+    });
+
+    document.getElementById('lspOverlay').addEventListener('click', () => {
+        document.getElementById('lspPopup').style.display = 'none';
+        document.getElementById('lspOverlay').style.display = 'none';
+        const audio = document.getElementById('lspAudio');
+        audio.pause();
+        audio.currentTime = 0;
+        isLspPlaying = false;
+        document.getElementById('playLspBtn').innerHTML = '▶ Включить песню';
+        document.getElementById('lspPlayer').style.display = 'none';
+    });
+
+    document.getElementById('watchVideoLspBtn').addEventListener('click', () => {
+        const friendId = parseInt(document.getElementById('watchVideoLspBtn').getAttribute('data-id'));
+        if (friendId >= 0) {
+            showVideo(friendId, false);
+        }
+    });
+
+    document.getElementById('watchEditLspBtn').addEventListener('click', () => {
+        const friendId = parseInt(document.getElementById('watchEditLspBtn').getAttribute('data-id'));
+        if (friendId >= 0) {
+            showVideo(friendId, true);
+        }
+    });
+
+    document.getElementById('closeVideoBtn').addEventListener('click', () => {
+        document.getElementById('videoModal').style.display = 'none';
+        const video = document.getElementById('modalVideo');
+        video.pause();
+        video.currentTime = 0;
+    });
+
+    document.getElementById('videoModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            document.getElementById('videoModal').style.display = 'none';
+            const video = document.getElementById('modalVideo');
+            video.pause();
+            video.currentTime = 0;
+        }
+    });
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+        showToast('🔍 Листай вниз и ищи эмодзи по всему сайту!', 5000);
+        window.scrollTo({ top: 400, behavior: 'smooth' });
+    });
+
+    updateProgress();
+
+    setInterval(() => {
+        if (Math.random() > 0.7) createFloatingHeart();
+    }, 2000);
+
+    console.log('🎯 25 эмодзи разбросаны по всему сайту!');
+    console.log('📹 Все видео на месте: video1.mp4 — video25.mp4 + edit.mp4');
+    console.log('💝 Финальное окно с Марусёночек, Iris и билетами!');
+    console.log('❤️ Кликни на пульсирующее сердце — полетят сердечки!');
+    console.log('🎫 Билеты можно увеличить по клику!');
+    console.log('🔙 Кнопка "Вернуться в финал" появится после закрытия!');
+</script>
+</body>
+</html>
